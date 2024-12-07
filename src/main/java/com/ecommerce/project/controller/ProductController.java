@@ -2,6 +2,7 @@ package com.ecommerce.project.controller;
 
 
 import com.ecommerce.project.model.Product;
+import com.ecommerce.project.payload.CategoryDTO;
 import com.ecommerce.project.payload.ProductDTO;
 import com.ecommerce.project.payload.ProductResponse;
 import com.ecommerce.project.service.ProductService;
@@ -31,5 +32,31 @@ public class ProductController {
     public ResponseEntity<ProductResponse> getProducts() {
         ProductResponse productResponse = productService.getAllProducts();
         return new ResponseEntity<>(productResponse, HttpStatus.OK);
+    }
+
+    @GetMapping("/public/categories/{categoryId}/products")
+    public ResponseEntity<ProductResponse> getProductByCategory(@PathVariable Long categoryId) {
+        ProductResponse productResponse = productService.searchByCategory(categoryId);
+        return new ResponseEntity<>(productResponse, HttpStatus.OK);
+    }
+
+
+    @GetMapping("/public/products/keyword/{keyword}")
+    public ResponseEntity<ProductResponse> getProductByKeyword(@PathVariable String keyword) {
+        ProductResponse productResponse = productService.searchProductsByKeyword(keyword);
+        return new ResponseEntity<>(productResponse, HttpStatus.FOUND);
+    }
+
+
+    @PutMapping("/admin/products/{productId}")
+    public ResponseEntity<ProductDTO> updateProduct(@RequestBody Product product, @PathVariable Long productId) {
+        ProductDTO productDTO = productService.updateProduct(product, productId);
+        return new ResponseEntity<>(productDTO, HttpStatus.OK);
+    }
+
+
+    @DeleteMapping("/admin/products/{productId}")
+    public ResponseEntity<ProductDTO> deleteProduct(@PathVariable long productId) {
+        return new ResponseEntity<>( productService.deleteProduct(productId), HttpStatus.OK);
     }
 }
